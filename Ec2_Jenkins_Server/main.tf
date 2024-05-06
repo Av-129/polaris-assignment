@@ -62,7 +62,7 @@ module "sg" {
 
 module "ec2_instance" {
   source = "terraform-aws-modules/ec2-instance/aws"
-  name = "ec2_jenkins"
+  name   = "ec2_jenkins"
 
   instance_type               = var.instance_type
   key_name                    = "ec2-jenkins"
