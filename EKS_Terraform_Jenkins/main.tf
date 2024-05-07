@@ -29,7 +29,7 @@ module "vpc" {
 }
 
 
-#EKS cluster module
+# EKS cluster module
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
@@ -37,6 +37,7 @@ module "eks" {
   cluster_version = "1.29"
 
   cluster_endpoint_public_access = false
+  cluster_endpoint_private_access = true  
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
 
@@ -49,6 +50,11 @@ module "eks" {
       instance_type = var.instance_type
     }
   }
+
+# cluster_endpoint_private_access = true
+# cluster_endpoint_private_access_cidrs = [ "10.0.16.0/20" ]
+# cluster_endpoint_public_access = false
+# cluster_endpoint_public_access_cidr = []
 
   tags = {
     Environment = "polaris"

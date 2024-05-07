@@ -1,3 +1,57 @@
+# We can cretae a docker Image with nginx to print thew hello world
+# Create a file named Dockerfile with the following content:
+
+# Dockerfile
+#
+# FROM alpine:latest
+# CMD echo "Hello, World!"
+# This Dockerfile uses Alpine Linux as the base image and sets a command to print "Hello, World!" when the container starts.
+
+# Build the Docker Image:
+# Build the Docker image using the Dockerfile:
+
+# docker build -t hello-world-image .
+# This command will build an image named hello-world-image using the Dockerfile in the current directory.
+
+# Push the Docker Image
+
+# docker push your-registry/hello-world-image
+# Replace your-registry with your actual container registry URL.
+
+# Modify the Kubernetes Deployment:
+# Now, modify your Kubernetes deployment YAML file (deployment.yml) to use the hello-world-image instead of the Nginx image. Update the containers section as follows:
+
+# yaml
+# Copy code
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: nginx-deployment
+#   labels:
+#     app: nginx
+# spec:
+#   replicas: 2
+#   selector:
+#     matchLabels:
+#       app: nginx
+#   template:
+#     metadata:
+#       labels:
+#         app: nginx
+#     spec:
+#       containers:
+#         - name: nginx
+#           image: your-registry/hello-world-image  # Use your image name here
+#           ports:
+#             - containerPort: 80
+# Replace your-registry/hello-world-image with the actual image name if you pushed the image to a private registry. If you're using a public registry or the image is available locally, use the image name directly (hello-world-image).
+
+# Apply the Deployment to Kubernetes:
+# Apply the updated deployment YAML file to your Kubernetes cluster:
+
+
+# kubectl apply -f deployment.yml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
