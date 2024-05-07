@@ -13,15 +13,15 @@ module "vpc" {
 
 
   tags = {
-    "kubernetes.io/cluster/my-eks-cluster" = "shared"
+    "kubernetes.io/cluster/ploaris-eks" = "shared"
   }
   public_subnet_tags = {
-    "kubernetes.io/cluster/my-eks-cluster" = "shared"
+    "kubernetes.io/cluster/ploaris-eks" = "shared"
     "kubernetes.io/role/elb"               = 1
 
   }
   private_subnet_tags = {
-    "kubernetes.io/cluster/my-eks-cluster" = "shared"
+    "kubernetes.io/cluster/ploaris-eks" = "shared"
     "kubernetes.io/role/private_elb"       = 1
 
   }
@@ -29,7 +29,7 @@ module "vpc" {
 }
 
 
-#EKS module
+#EKS cluster module
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"

@@ -1,0 +1,76 @@
+pipeline {
+    agent any
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_DEFAULT_REGION = 'ap-south-1'
+    }
+    stages{
+        stage('Checkout SCM'){
+            steps{
+                script{
+                    //Generate  using pipeline syntax
+                    //login to the jenkins server, imoort the security credentials to establish a connection between aws and jenkins
+                }
+            }
+        }
+         stage('Initializing Terraform'){
+            steps{
+                script{
+                    dir('EKS_Terraform_Jenkins'){
+                         sh 'terraform init'
+                    }
+                }
+            }
+        }
+        stage('Formating terraform code'){
+            steps{
+                script{
+                    dir('EKS_Terraform_Jenkins'){
+                         sh 'terraform fmt'
+                    }
+                }
+            }
+        }
+        stage('Validating Terraform'){
+            steps{
+                script{
+                    dir('EKS_Terraform_Jenkins'){
+                         sh 'terraform validate'
+                    }
+                }
+            }
+        }
+        stage('Previewing the infrastructure'){
+            steps{
+                script{
+                    dir('EKS_Terraform_Jenkins'){
+                         sh 'terraform plan'
+                    }
+                    input(message: "Are you sure to proceed?", ok: "proceed")
+                }
+            }
+        }
+        // create chioce perameters, action apply, destroy 
+        stage('Creating/Destroying an EKS cluster'){
+            steps{
+                script{
+                    dir('EKS_Terraform_Jenkins'){
+                         sh 'terraform $action --auto-approve'
+                    }
+                }
+            }
+        }
+        stage("Deploying Nginx"){
+            steps{
+                script{
+                    dir('EKS_Terraform_Jenkins/configuration-file'){
+                        sh 'aws eks update-kubeconfig --name ploaris-eks --region ap-south-1'
+                        sh 'kubectl apply -f deployment.yml'
+                        sh 'kubectl apply -f service.yml'
+                    }
+                }
+            }
+        }
+    }
+}
